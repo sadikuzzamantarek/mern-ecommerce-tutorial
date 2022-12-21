@@ -5,13 +5,19 @@ const APIFeature = require("../utils/apiFeature");
 // urld products?keyword=apple
 exports.getAllProduct = async (req, res, next) => {
   try {
+    const resultPerPage = 4;
+
+    const totalProduct = await Products.countDocuments();
+
     const apiFeature = new APIFeature(Products.find(), req.query)
-    .search()
-    .filter();
+      .search()
+      .filter()
+      .pagination(resultPerPage);
     const products = await apiFeature.query;
     res.status(200).json({
       success: true,
       message: "Got all products from get request",
+      totalProduct,
       count: products.length,
       products,
     });
